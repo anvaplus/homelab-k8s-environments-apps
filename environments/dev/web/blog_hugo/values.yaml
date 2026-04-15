@@ -1,0 +1,21 @@
+appName: web
+componentName: hugo
+namespace: web
+environment: dev
+# version is managed in homelab-k8s-environments
+
+deployment:
+  spec:
+    replicas: 1
+
+image:
+  repository: anvaplus/hugo-blog-example
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi

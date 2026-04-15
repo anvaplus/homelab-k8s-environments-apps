@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web-hugo-dev
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: ""
+    namespace: web
+    server: https://kubernetes.default.svc
+  project: argo-config
+  sources:
+    - repoURL: https://github.com/anvaplus/homelab-k8s-environments
+      targetRevision: HEAD
+      ref: valuesRepoDefault
+
+    - repoURL: https://github.com/anvaplus/homelab-k8s-environments-apps
+      targetRevision: HEAD
+      ref: valuesRepo
+
+    - repoURL: https://github.com/anvaplus/homelab-k8s-base-manifests
+      targetRevision: HEAD
+      path: charts/microservices/hugo/v0.1.0
+      helm:
+        valueFiles:
+          - $valuesRepo/environments/dev/web/homelab_hugo/values.yaml
+          - $valuesRepoDefault/environments/dev/web/homelab_hugo/values.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
